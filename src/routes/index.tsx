@@ -166,7 +166,7 @@ function Dashboard() {
                     ) : (
                       <TrendingDown className="size-3.5" />
                     )}
-                    {k.delta > 0 ? "↑" : "↓"} {Math.abs(k.delta)}%
+                    {Math.abs(k.delta)}%
                   </span>
                 </div>
                 <div className="mt-3">
