@@ -63,12 +63,38 @@ function Dashboard() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [selected, setSelected] = useState<Neighborhood | null>(null);
   const [compare, setCompare] = useState({ a: "sea-cliff", b: "harbor-point" });
+  const fileRef = useRef<HTMLInputElement>(null);
+  const dashboardRef = useRef<HTMLDivElement>(null);
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const rows = String(reader.result || "")
+        .split("\n")
+        .filter((r) => r.trim().length > 0);
+      toast.success(`Loaded ${file.name}`, {
+        description: `${Math.max(0, rows.length - 1)} rows parsed — showing demo analytics for now.`,
+      });
+      dashboardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    reader.onerror = () => toast.error("Could not read that file.");
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const exploreDemo = () => {
+    setSelected(neighborhoods[0]);
+    dashboardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.classList.toggle("light", next === "light");
   };
+
 
   return (
     <div className="min-h-screen w-full">
