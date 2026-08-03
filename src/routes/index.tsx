@@ -130,17 +130,31 @@ function Dashboard() {
               one intelligence layer built for operators and investors.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <button className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow)]">
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".csv,.json,text/csv,application/json"
+                className="hidden"
+                onChange={handleUpload}
+              />
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow)]"
+              >
                 <Upload className="size-4" /> Upload Dataset
               </button>
-              <button className="inline-flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:border-primary/40">
+              <button
+                onClick={exploreDemo}
+                className="inline-flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:border-primary/40"
+              >
                 Explore Demo <ArrowUpRight className="size-4" />
               </button>
             </div>
           </motion.section>
 
           {/* Section header + exports */}
-          <div className="mt-10 flex flex-wrap items-end justify-between gap-4">
+          <div ref={dashboardRef} className="mt-10 flex flex-wrap items-end justify-between gap-4">
+
             <div>
               <h2 className="text-2xl sm:text-[28px]">Neighborhood Intelligence Dashboard</h2>
               <p className="mt-1.5 text-sm text-muted-foreground">
