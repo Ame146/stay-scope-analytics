@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 import { ArrowUpRight, Download, FileText, TrendingDown, TrendingUp, Upload } from "lucide-react";
 import { AppSidebar } from "@/components/stayscope/AppSidebar";
 import { TopBar } from "@/components/stayscope/TopBar";
