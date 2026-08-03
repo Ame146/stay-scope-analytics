@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 import { ArrowUpRight, Download, FileText, TrendingDown, TrendingUp, Upload } from "lucide-react";
 import { AppSidebar } from "@/components/stayscope/AppSidebar";
 import { TopBar } from "@/components/stayscope/TopBar";
@@ -62,12 +63,38 @@ function Dashboard() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [selected, setSelected] = useState<Neighborhood | null>(null);
   const [compare, setCompare] = useState({ a: "sea-cliff", b: "harbor-point" });
+  const fileRef = useRef<HTMLInputElement>(null);
+  const dashboardRef = useRef<HTMLDivElement>(null);
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const rows = String(reader.result || "")
+        .split("\n")
+        .filter((r) => r.trim().length > 0);
+      toast.success(`Loaded ${file.name}`, {
+        description: `${Math.max(0, rows.length - 1)} rows parsed — showing demo analytics for now.`,
+      });
+      dashboardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    reader.onerror = () => toast.error("Could not read that file.");
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const exploreDemo = () => {
+    setSelected(neighborhoods[0]);
+    dashboardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.classList.toggle("light", next === "light");
   };
+
 
   return (
     <div className="min-h-screen w-full">
@@ -103,17 +130,31 @@ function Dashboard() {
               one intelligence layer built for operators and investors.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <button className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow)]">
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".csv,.json,text/csv,application/json"
+                className="hidden"
+                onChange={handleUpload}
+              />
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow)]"
+              >
                 <Upload className="size-4" /> Upload Dataset
               </button>
-              <button className="inline-flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:border-primary/40">
+              <button
+                onClick={exploreDemo}
+                className="inline-flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:border-primary/40"
+              >
                 Explore Demo <ArrowUpRight className="size-4" />
               </button>
             </div>
           </motion.section>
 
           {/* Section header + exports */}
-          <div className="mt-10 flex flex-wrap items-end justify-between gap-4">
+          <div ref={dashboardRef} className="mt-10 flex flex-wrap items-end justify-between gap-4">
+
             <div>
               <h2 className="text-2xl sm:text-[28px]">Neighborhood Intelligence Dashboard</h2>
               <p className="mt-1.5 text-sm text-muted-foreground">
