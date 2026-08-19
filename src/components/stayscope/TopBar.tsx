@@ -45,10 +45,10 @@ export function TopBar({
           </button>
           <div className="flex items-center gap-2.5 rounded-2xl border border-border py-1.5 pl-1.5 pr-3.5">
             <span className="num grid size-8 place-items-center rounded-xl bg-accent/20 text-xs font-semibold text-accent">
-              AV
+              AM
             </span>
             <div className="hidden leading-tight sm:block">
-              <p className="text-xs font-semibold">Ava Reyes</p>
+              <p className="text-xs font-semibold">Ameksha</p>
               <p className="text-[11px] text-muted-foreground">Portfolio Analyst</p>
             </div>
           </div>
